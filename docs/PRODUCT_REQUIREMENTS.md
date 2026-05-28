@@ -63,6 +63,8 @@ Use a Supabase-first backend for MVP:
 
 A traditional backend server such as NestJS/Fastify/Express is not the MVP default. Revisit only if Supabase-first functions are not enough.
 
+The accepted platform decision is documented in `docs/architecture/ADR-001-backend-platform-and-database.md`. The development, branch, environment, and release workflow is documented in `docs/DEVELOPMENT_WORKFLOW.md`.
+
 ## API Shape
 
 APIs should be grouped first by consuming surface, then domain:
