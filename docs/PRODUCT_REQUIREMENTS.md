@@ -65,6 +65,37 @@ A traditional backend server such as NestJS/Fastify/Express is not the MVP defau
 
 The accepted platform decision is documented in `docs/architecture/ADR-001-backend-platform-and-database.md`. The development, branch, environment, and release workflow is documented in `docs/DEVELOPMENT_WORKFLOW.md`.
 
+## Mandatory Implementation Context
+
+Before planning or coding any backend feature, the LLM/developer must read:
+
+1. This product bible.
+2. The relevant feature spec in `docs/features/`.
+3. The relevant files in this repo's `rules/` folder.
+4. Relevant privacy/security/legal docs in `docs/privacy/`, `docs/security/`, and `docs/vendors/`.
+5. Relevant design references when the backend change affects a browser/mobile/site flow.
+
+The `rules/` folder is the backend implementation source of truth for architecture, API shape, Supabase/RLS, Stripe, TypeScript, testing, privacy, security, package choices, and code quality. Every feature plan must list which rules files were consulted. Do not implement code that contradicts repo rules unless the feature spec explicitly documents and approves the exception.
+
+Code must be typed, maintainable, and scoped. Do not use `any` for domain data, child data, auth, permissions, API payloads, database rows, consent records, billing/payment records, or vendor responses unless the feature plan justifies a narrow boundary exception. Prefer DRY code, clear ownership, and simple SOLID design over duplicated or tangled logic. Push back when a request conflicts with privacy, security, architecture, data ownership, maintainability, or child-safety expectations.
+
+## Feature Document Creation Method
+
+Every new feature document must create segmented implementation steps using this default order:
+
+1. Dummy frontend review gate:
+   - If there is a user-facing surface, the dummy frontend must be created first in the relevant frontend repo.
+   - The LLM must explicitly ask the user to review the dummy frontend, provide feedback, and approve it before backend implementation starts.
+   - Requested dummy frontend fixes must be completed before backend work starts.
+   - Backend-only work may skip this only when the feature document explains why and provides contracts, fixtures, SQL/RLS cases, or mock responses instead.
+2. Backend build from approved requirements.
+3. Connect frontend and backend.
+4. Manual test with synthetic data.
+5. Provide results for user manual testing, collect feedback, and repeat manual testing/fixing until accepted.
+6. Final verification, including Codex browser QA when applicable.
+
+Feature steps can be split into smaller substeps such as `2A`, `2B`, and `2C` whenever the work is too large to complete cleanly in one pass. Split heavy backend, RLS, payment, API, UI, testing, or migration work into smaller pieces rather than hiding risk inside one broad step.
+
 ## API Shape
 
 APIs should be grouped first by consuming surface, then domain:
@@ -257,6 +288,17 @@ Rules:
 - Service-role use only in backend-only functions.
 - Public endpoints must avoid record enumeration.
 - Important actions require audit logs.
+
+## Verification And Browser QA
+
+Every new feature must include a final verification step using the Codex in-app browser before it can be marked complete.
+
+For backend-only features, the implementation plan must either:
+
+- use the Codex in-app browser to verify any browser-visible local endpoint, API health page, generated docs page, or downstream web/mobile/site flow affected by the backend change; or
+- explicitly mark browser QA as not applicable and explain why there is no browser-visible surface.
+
+The final completion note must state what browser QA was performed, what passed, and what was not verified.
 
 ## MVP Scope
 

@@ -53,6 +53,8 @@ KidFlow has four repos:
 
 Each repo keeps its own `docs/PRODUCT_REQUIREMENTS.md`, rules, feature specs, and implementation code.
 
+Each repo's `rules/` folder is mandatory implementation context and must be treated as the source of truth for code style, architecture, package expectations, privacy/security, testing, and repo-specific best practices. Every feature-specific implementation plan must list the rules files consulted before code is written.
+
 `kidflow-backend` owns database, RLS, APIs, Stripe, auth, jobs, secrets, generated types, and canonical backend decisions.
 
 ## Branching Model
@@ -201,10 +203,22 @@ KidFlow uses three levels of planning:
 
 3. Feature-specific implementation plan:
    - Created immediately before coding.
-   - Lists exact files, migrations, functions, UI pieces, tests, verification steps, and rollout notes.
+   - Lists exact rules files consulted, dummy frontend approval status or backend-only exception, files, migrations, functions, UI pieces, tests, feedback loop, verification steps, Codex in-app browser QA, and rollout notes.
    - Requires approval before implementation.
 
 No implementation starts without an approved feature overview and implementation plan.
+
+## Default Feature Delivery Loop
+
+For user-facing features, KidFlow builds in this order:
+
+1. Dummy frontend first in the affected frontend repo.
+2. Backend only after the dummy frontend is reviewed and accepted.
+3. Connect frontend and backend.
+4. Manual test with synthetic data.
+5. Provide feedback for manual testing and repeat steps 4 and 5 until accepted.
+
+Backend-only foundation, RLS/security, migration, job, webhook, or API-contract work can skip dummy frontend only when the implementation plan explicitly documents the exception and provides contracts, fixtures, SQL/RLS cases, or mock responses instead.
 
 ## Cross-Repo Feature Rule
 
@@ -246,26 +260,28 @@ Backend:
 - RLS/permission tests or manual verification documented.
 - API/function tests or smoke checks pass.
 - Stripe webhook/idempotency behavior verified if touched.
+- Codex in-app browser QA completed for browser-visible endpoints/pages/flows, or explicitly marked not applicable with reason.
 
 Web:
 
 - Type check.
 - Lint.
 - Build.
-- Browser smoke check for changed flow.
+- Codex in-app browser smoke check for changed flow.
 
 Mobile:
 
 - Type check.
 - Lint.
 - Expo/mobile smoke check for changed flow.
+- Codex in-app browser QA for Expo web/auth callback/payment redirect/registration mobile-web or other browser-visible affected surfaces.
 
 Site:
 
 - Type check.
 - Lint.
 - Build.
-- Browser smoke check.
+- Codex in-app browser smoke check.
 
 ## Release Gates Before Real Sunridge Data
 

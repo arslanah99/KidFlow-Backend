@@ -4,6 +4,8 @@ Status: Draft
 
 Approval status: Not approved for implementation.
 
+Implementation plan: `docs/features/KF-001-auth-org-centre-roles-rls-implementation-plan.md`
+
 ## Goal
 
 Create the backend foundation that every KidFlow feature depends on: Supabase Auth, organizations, centres, users/profiles, memberships, roles, basic staff/guardian/child relationships, classroom scoping, and first-pass RLS.
@@ -85,7 +87,18 @@ This feature should prove that KidFlow can safely separate director/admin, staff
 - `kidflow-backend/docs/DEVELOPMENT_WORKFLOW.md`: Phase 0 local/cloud sandbox flow, no real data, feature planning levels.
 - `kidflow-backend/docs/privacy/CHILD_DATA_PROTECTION_STANDARD.md`: default deny, tenant isolation, parent/staff/director scoping.
 - `kidflow-backend/docs/security/SECURITY_BASELINE.md`: RLS, server-side validation, no service-role keys in clients.
+
+## Repo Rules Read
+
+The backend `rules/` folder is the implementation source of truth for this feature.
+
+- `kidflow-backend/rules/architecture.md`: backend ownership and Supabase-first boundaries.
+- `kidflow-backend/rules/api.md`: backend API ownership and service-role boundaries.
 - `kidflow-backend/rules/supabase-rls.md`: RLS requirements.
+- `kidflow-backend/rules/typescript.md`: generated types, no unsafe `any`, and typed backend contracts.
+- `kidflow-backend/rules/privacy-security.md`: child-data, logging, vendor, and least-privilege requirements.
+- `kidflow-backend/rules/testing.md`: RLS/security verification expectations.
+- `kidflow-backend/rules/llm-workflow.md`: plan-before-code and stop-condition rules.
 
 ## Design References
 
@@ -292,28 +305,37 @@ Support/founder:
 
 ## Implementation Steps
 
-1. Planning and questions:
+If a step becomes too large, split it into smaller substeps such as `3A`, `3B`, and `3C` before implementation.
+
+1. Dummy frontend status:
+   - Not applicable for KF-001 because this is backend foundation, schema, auth, and RLS work.
+   - Backend contracts, seed fixtures, and RLS verification cases are required instead.
+2. Planning and questions:
    - Confirm classroom shared-device session approach.
    - Confirm exact delete/graduation rules for children and guardians.
-2. Data/contracts:
-   - Draft ERD for foundation tables.
-   - Define role enum/lookup and permission fields.
-3. API/functions:
-   - Define auth/session role-context needs for web/mobile.
-   - Define RLS helper SQL functions.
-4. Database/RLS:
-   - Create initial migrations.
-   - Enable RLS.
-   - Add tenant/role/guardian/classroom policies.
-   - Add synthetic seed data.
-5. Privacy/security:
+3. Data/contracts:
+   - `3A` draft ERD for foundation tables.
+   - `3B` define role enum/lookup and permission fields.
+   - `3C` define seed fixture shape and expected role-context examples.
+4. API/functions:
+   - `4A` define auth/session role-context needs for web/mobile.
+   - `4B` define RLS helper SQL functions.
+5. Database/RLS:
+   - `5A` create initial migrations.
+   - `5B` enable RLS.
+   - `5C` add tenant/role/guardian/classroom policies.
+   - `5D` add synthetic seed data.
+6. Privacy/security:
    - Verify no real data in seeds.
    - Verify service-role usage is backend-only.
    - Verify public/no-auth behavior.
-6. Tests:
+7. Tests:
    - RLS tests for director/admin, staff, parent, restricted guardian, public/no-auth.
    - Migration apply/reset checks.
-7. Verification:
+8. Manual test and feedback loop:
+   - Provide local verification results for review.
+   - Repeat manual verification and feedback until the foundation is accepted.
+9. Verification:
    - Document manual verification matrix.
    - Generate types.
    - Confirm future feature specs can depend on this foundation.
@@ -374,6 +396,7 @@ Support/founder:
 - [ ] Audit event foundation is documented.
 - [ ] Public/no-auth boundary is documented.
 - [ ] Child-data impact is documented.
+- [ ] Relevant backend repo rules were read, followed, and any approved exception is documented.
 - [ ] Permissions/RLS verification plan is documented.
 - [ ] Consent/legal needs are handled or marked launch-blocking.
 - [ ] API/data contracts are documented.
