@@ -38,7 +38,9 @@ Default setup:
 - Migrations: plain SQL migrations owned by `kidflow-backend`.
 - Generated DB types: generated from the backend schema and treated as canonical.
 
-The free tier may be used for local/dev experimentation only. Real Sunridge child, parent, staff, billing, medical, incident, or photo data must not enter a free-tier/dev project.
+The free tier may be used for local/dev experimentation only. Real Sunridge child, parent, staff, billing, medical, incident, message, or photo data must not enter a free-tier/dev project.
+
+Free-tier Phase 0 uses one cloud sandbox project plus local development. It does not require separate cloud dev, staging, and production projects. Staging and production are created when KidFlow moves toward real Sunridge data or live payments.
 
 Before real production data:
 
@@ -115,6 +117,7 @@ Decision: not appropriate for MVP.
 ## Open Follow-Ups
 
 - Choose exact Supabase project names for local/dev/staging/prod.
+- Choose exact Phase 0 cloud sandbox name.
 - Decide whether staging also uses Canada Central.
 - Define backup export process outside Supabase.
 - Define auth email templates and redirect URLs per environment.

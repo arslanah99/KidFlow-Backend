@@ -10,6 +10,38 @@ Branches are not environments.
 
 KidFlow should use protected branches, pull requests, separate runtime environments, and explicit promotion. This avoids four repos drifting across separate `dev`, `qa`, and `prod` branches.
 
+The full environment model is the production-ready target. While KidFlow is on free-tier tooling, use the Phase 0 workflow below.
+
+## Phase 0 Free-Tier Workflow
+
+Free-tier development is allowed before real Sunridge data enters the system.
+
+Phase 0 environments:
+
+- Local: local app and local Supabase where practical.
+- Cloud sandbox: one Supabase free project for shared/manual testing.
+- No true cloud staging yet.
+- No production yet.
+
+Rules:
+
+- Use synthetic data only.
+- Stripe test mode only.
+- No real child, parent, staff, billing, medical, incident, message, or photo data.
+- No live Sunridge operations.
+- QA means manual/browser/mobile checks against local and the cloud sandbox.
+- Do not call the cloud sandbox "production."
+- Do not build production launch assumptions around free-tier limits.
+
+Before real Sunridge use, move out of Phase 0:
+
+- Create paid production Supabase in Canada Central.
+- Create staging/QA as a separate project or approved production-like environment.
+- Enable backup/PITR plan.
+- Complete restore test.
+- Complete legal/vendor/privacy review.
+- Complete RLS verification.
+
 ## Repos
 
 KidFlow has four repos:
@@ -44,6 +76,37 @@ Why:
 
 If a future team needs release trains, add `release/YYYY-MM-DD` branches later.
 
+## GitHub Free-Tier Limitations
+
+If private-repo branch protection, rulesets, automatic branch deletion, or other GitHub governance features are unavailable on the current plan, do not distort the architecture to work around that.
+
+Use this manual process until upgrading GitHub is worth it:
+
+1. Work on `codex/kf-###-short-name` or `feature/kf-###-short-name`.
+2. Merge through a PR whenever practical.
+3. Do not commit directly to `main` except for deliberate docs-only bootstrap work.
+4. After merge, delete the remote feature branch manually in GitHub or with:
+
+```bash
+git push origin --delete branch-name
+```
+
+5. Prune local stale branches periodically:
+
+```bash
+git fetch --prune
+```
+
+GitHub Actions may still be used on private repos within included free minutes. Keep CI small while free-tier:
+
+- Run checks on PRs and `main`.
+- Skip full CI for docs-only changes when possible.
+- Prefer Linux runners.
+- Avoid expensive scheduled jobs.
+- Run local checks before pushing.
+
+Upgrade GitHub only when branch protection, required checks, team permissions, or higher Actions usage becomes materially useful.
+
 ## Environments
 
 ### Local
@@ -63,7 +126,7 @@ Purpose: shared sandbox if needed.
 
 Rules:
 
-- May use Supabase free tier.
+- May use Supabase free tier during Phase 0.
 - Test Stripe only.
 - Synthetic data only.
 - Can be reset.
@@ -75,7 +138,7 @@ Purpose: production-like testing before release.
 
 Rules:
 
-- Separate Supabase project.
+- Separate Supabase project once paid infrastructure exists.
 - Prefer Canada Central.
 - Test Stripe only unless a controlled live-payment test is explicitly approved.
 - Same migrations as production.
@@ -222,6 +285,7 @@ Production launch is blocked until:
 1. Commit current planning/design docs.
 2. Create `KF-001 auth + org/centre + roles + RLS foundation` in `kidflow-backend`.
 3. Approve the `KF-001` implementation plan.
-4. Scaffold backend/Supabase foundation.
+4. Scaffold backend/Supabase foundation locally and against the cloud sandbox.
 5. Add initial schema, RLS, generated types, and synthetic seed data.
 6. Build director web shell/dashboard against the approved backend foundation.
+7. Upgrade/create paid staging and production only before real Sunridge data or live payments.
