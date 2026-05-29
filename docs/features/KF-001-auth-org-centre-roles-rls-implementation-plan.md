@@ -2,9 +2,9 @@
 
 Feature: Auth, Organization, Centre, Roles, And RLS Foundation
 
-Status: Draft for review
+Status: Implemented and locally verified
 
-Code implementation approval: Not approved yet.
+Code implementation approval: Approved by user message: "commited ok run kf-001"
 
 ## Goal
 

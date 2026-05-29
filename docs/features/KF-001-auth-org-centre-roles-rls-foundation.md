@@ -1,10 +1,11 @@
 # KF-001 Auth, Organization, Centre, Roles, And RLS Foundation
 
-Status: Draft
+Status: Implemented and locally verified
 
-Approval status: Not approved for implementation.
+Approval status: Approved by user message: "commited ok run kf-001"
 
 Implementation plan: `docs/features/KF-001-auth-org-centre-roles-rls-implementation-plan.md`
+Verification notes: `docs/features/KF-001-verification.md`
 
 ## Goal
 

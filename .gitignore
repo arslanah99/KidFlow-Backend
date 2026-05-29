@@ -1,0 +1,20 @@
+# Environment/secrets
+.env
+.env.*
+!.env.example
+
+# Supabase local runtime
+supabase/.branches/
+supabase/.temp/
+
+# Dependencies/build output for future backend code
+node_modules/
+dist/
+build/
+coverage/
+
+# OS/editor
+.DS_Store
+.idea/
+.vscode/
+
